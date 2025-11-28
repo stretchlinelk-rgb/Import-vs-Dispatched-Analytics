@@ -3,52 +3,68 @@
 // ============================================
 
 let editingMonthKey = null;
+let mergeYD = false; // when true YD is merged into CP (3-plant view)
 
 let plantData = {
     ep1: [
-        // Sample values for Jan-Dec 2025 (EP1)
-        { year: 2025, month: 1, grn: 200000, import: 140000, dispatched: 152251, export: 30846, wasteCusde: 14922, wasteAct: 28000, enabled: true },
-        { year: 2025, month: 2, grn: 130000, import: 130000, dispatched: 120944, export: 40975, wasteCusde: 3000, wasteAct: 15000, enabled: true },
-        { year: 2025, month: 3, grn: 180000, import: 120000, dispatched: 135000, export: 25000, wasteCusde: 12000, wasteAct: 18000, enabled: true },
-        { year: 2025, month: 4, grn: 220000, import: 150000, dispatched: 160000, export: 35000, wasteCusde: 15000, wasteAct: 22000, enabled: true },
-        { year: 2025, month: 5, grn: 195000, import: 135000, dispatched: 145000, export: 28000, wasteCusde: 13500, wasteAct: 20000, enabled: true },
-        { year: 2025, month: 6, grn: 205000, import: 138000, dispatched: 150000, export: 30000, wasteCusde: 14000, wasteAct: 21000, enabled: true },
-        { year: 2025, month: 7, grn: 215000, import: 142000, dispatched: 155000, export: 32000, wasteCusde: 14500, wasteAct: 21500, enabled: true },
-        { year: 2025, month: 8, grn: 190000, import: 130000, dispatched: 140000, export: 26000, wasteCusde: 12500, wasteAct: 19000, enabled: true },
-        { year: 2025, month: 9, grn: 210000, import: 145000, dispatched: 162000, export: 34000, wasteCusde: 14800, wasteAct: 22000, enabled: true },
-        { year: 2025, month: 10, grn: 230000, import: 155000, dispatched: 170000, export: 36000, wasteCusde: 15000, wasteAct: 23000, enabled: true },
-        { year: 2025, month: 11, grn: 225000, import: 150000, dispatched: 168000, export: 35000, wasteCusde: 14850, wasteAct: 22500, enabled: true },
-        { year: 2025, month: 12, grn: 240000, import: 160000, dispatched: 180000, export: 38000, wasteCusde: 16000, wasteAct: 24000, enabled: true }
+        { year: 2025, month: 1, grn: 121569.27, import: 254551.19, dispatched: 152250.90, export: 30846.05, wasteCusde: 14922.09, wasteAct: 28872.09, enabled: true },
+        { year: 2025, month: 2, grn: 206773.39, import: 75466.34, dispatched: 120943.92, export: 40975.49, wasteCusde: 3000.00, wasteAct: 15690.00, enabled: true },
+        { year: 2025, month: 3, grn: 120411.12, import: 189414.04, dispatched: 125022.07, export: 34058.45, wasteCusde: 2000.00, wasteAct: 10555.00, enabled: true },
+        { year: 2025, month: 4, grn: 418.23, import: 41568.33, dispatched: 60448.51, export: 14419.75, wasteCusde: 34667.88, wasteAct: 43077.88, enabled: true },
+        { year: 2025, month: 5, grn: 47055.19, import: 62906.29, dispatched: 6416.41, export: 1442.75, wasteCusde: 3098.00, wasteAct: 3098.00, enabled: true },
+        { year: 2025, month: 6, grn: 94988.04, import: 220417.34, dispatched: 38575.41, export: 10362.03, wasteCusde: 1000.00, wasteAct: 4495.00, enabled: true },
+        { year: 2025, month: 7, grn: 134793.66, import: 125291.46, dispatched: 73710.73, export: 9144.11, wasteCusde: 2000.00, wasteAct: 9145.00, enabled: true },
+        { year: 2025, month: 8, grn: 92887.71, import: 43348.62, dispatched: 63793.41, export: 2818.64, wasteCusde: 3400.00, wasteAct: 7436.40, enabled: true },
+        { year: 2025, month: 9, grn: 48300.01, import: 66892.76, dispatched: 42656.74, export: 5475.57, wasteCusde: 4291.00, wasteAct: 8401.00, enabled: true },
+        { year: 2025, month: 10, grn: 74094.10, import: 121133.30, dispatched: 47292.42, export: 5407.41, wasteCusde: 3242.00, wasteAct: 10922.00, enabled: true },
+        { year: 2025, month: 11, grn: 73705.70, import: 57956.92, dispatched: 43067.60, export: 2938.69, wasteCusde: 24202.00, wasteAct: 23302.00, enabled: true },
+        // month 12 intentionally left empty in image -> keep as a zero entry if you need it, otherwise no row
     ],
+
     ep2: [
-        // Sample values for Jan-Dec 2025 (EP2)
-        { year: 2025, month: 1, grn: 180000, import: 90000, dispatched: 140000, export: 25000, wasteCusde: 10000, wasteAct: 15000, enabled: true },
-        { year: 2025, month: 2, grn: 160000, import: 95000, dispatched: 130000, export: 20000, wasteCusde: 8000, wasteAct: 12000, enabled: true },
-        { year: 2025, month: 3, grn: 190000, import: 100000, dispatched: 150000, export: 22000, wasteCusde: 11000, wasteAct: 16000, enabled: true },
-        { year: 2025, month: 4, grn: 210000, import: 110000, dispatched: 165000, export: 28000, wasteCusde: 12000, wasteAct: 18000, enabled: true },
-        { year: 2025, month: 5, grn: 175000, import: 88000, dispatched: 138000, export: 23000, wasteCusde: 9500, wasteAct: 14000, enabled: true },
-        { year: 2025, month: 6, grn: 185000, import: 92000, dispatched: 145000, export: 24000, wasteCusde: 10500, wasteAct: 15000, enabled: true },
-        { year: 2025, month: 7, grn: 195000, import: 98000, dispatched: 152000, export: 26000, wasteCusde: 11500, wasteAct: 16000, enabled: true },
-        { year: 2025, month: 8, grn: 170000, import: 87000, dispatched: 132000, export: 22000, wasteCusde: 9200, wasteAct: 13000, enabled: true },
-        { year: 2025, month: 9, grn: 200000, import: 105000, dispatched: 160000, export: 28000, wasteCusde: 12500, wasteAct: 17000, enabled: true },
-        { year: 2025, month: 10, grn: 205000, import: 108000, dispatched: 165000, export: 29000, wasteCusde: 12800, wasteAct: 17500, enabled: true },
-        { year: 2025, month: 11, grn: 198000, import: 102000, dispatched: 158000, export: 27500, wasteCusde: 12200, wasteAct: 16800, enabled: true },
-        { year: 2025, month: 12, grn: 210000, import: 110000, dispatched: 170000, export: 30000, wasteCusde: 13500, wasteAct: 18000, enabled: true }
+        { year: 2025, month: 1, grn: 91619.48, import: 76796.06, dispatched: 0, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 2, grn: 82846.73, import: 77049.22, dispatched: 0, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 3, grn: 43681.93, import: 43432.28, dispatched: 0, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 4, grn: 39681.76, import: 28954.49, dispatched: 0, export: 0, wasteCusde: 2434.00, wasteAct: 2434.00, enabled: true },
+        { year: 2025, month: 5, grn: 48114.42, import: 26072.38, dispatched: 0, export: 0, wasteCusde: 2809.00, wasteAct: 2809.00, enabled: true },
+        { year: 2025, month: 6, grn: 40897.96, import: 42178.74, dispatched: 0, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 7, grn: 72096.58, import: 61611.41, dispatched: 0, export: 0, wasteCusde: 3144.00, wasteAct: 3144.00, enabled: true },
+        { year: 2025, month: 8, grn: 54636.33, import: 25085.40, dispatched: 0, export: 0, wasteCusde: 1032.00, wasteAct: 1032.00, enabled: true },
+        { year: 2025, month: 9, grn: 15185.31, import: 8668.21, dispatched: 0, export: 362.48, wasteCusde: 1922.00, wasteAct: 1922.00, enabled: true },
+        { year: 2025, month: 10, grn: 16662.46, import: 16626.82, dispatched: 0, export: 256.80, wasteCusde: 2070.00, wasteAct: 2070.00, enabled: true },
+        { year: 2025, month: 11, grn: 14105.13, import: 20394.52, dispatched: 0, export: 289.33, wasteCusde: 2000.00, wasteAct: 2000.00, enabled: true },
+        // month 12 empty
     ],
+
     cp: [
-        // Sample values for Jan-Dec 2025 (CP)
-        { year: 2025, month: 1, grn: 150000, import: 80000, dispatched: 120000, export: 18000, wasteCusde: 8000, wasteAct: 12000, enabled: true },
-        { year: 2025, month: 2, grn: 140000, import: 75000, dispatched: 115000, export: 16000, wasteCusde: 7000, wasteAct: 11000, enabled: true },
-        { year: 2025, month: 3, grn: 165000, import: 85000, dispatched: 130000, export: 20000, wasteCusde: 9000, wasteAct: 13000, enabled: true },
-        { year: 2025, month: 4, grn: 185000, import: 95000, dispatched: 145000, export: 22000, wasteCusde: 10000, wasteAct: 15000, enabled: true },
-        { year: 2025, month: 5, grn: 155000, import: 78000, dispatched: 125000, export: 19000, wasteCusde: 8500, wasteAct: 13000, enabled: true },
-        { year: 2025, month: 6, grn: 160000, import: 80000, dispatched: 128000, export: 19500, wasteCusde: 8700, wasteAct: 13500, enabled: true },
-        { year: 2025, month: 7, grn: 170000, import: 84000, dispatched: 134000, export: 20500, wasteCusde: 9000, wasteAct: 14000, enabled: true },
-        { year: 2025, month: 8, grn: 150000, import: 78000, dispatched: 120000, export: 18500, wasteCusde: 8200, wasteAct: 12500, enabled: true },
-        { year: 2025, month: 9, grn: 175000, import: 90000, dispatched: 138000, export: 21000, wasteCusde: 9600, wasteAct: 15000, enabled: true },
-        { year: 2025, month: 10, grn: 180000, import: 92000, dispatched: 142000, export: 22000, wasteCusde: 9800, wasteAct: 15500, enabled: true },
-        { year: 2025, month: 11, grn: 172000, import: 88000, dispatched: 136000, export: 20500, wasteCusde: 9400, wasteAct: 14800, enabled: true },
-        { year: 2025, month: 12, grn: 185000, import: 95000, dispatched: 150000, export: 23000, wasteCusde: 10500, wasteAct: 16000, enabled: true }
+        { year: 2025, month: 1, grn: 177357.03, import: 37050.78, dispatched: 177150.43, export: 50207.87, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 2, grn: 166864.50, import: 116221.55, dispatched: 130927.75, export: 32835.43, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 3, grn: 220358.32, import: 166603.27, dispatched: 153959.20, export: 48081.86, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 4, grn: 203763.87, import: 85003.12, dispatched: 140858.01, export: 43630.59, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 5, grn: 150905.18, import: 110357.25, dispatched: 140309.06, export: 54870.28, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 6, grn: 218180.65, import: 130959.46, dispatched: 148222.05, export: 49297.82, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 7, grn: 232082.79, import: 113190.45, dispatched: 155597.44, export: 47203.73, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 8, grn: 206104.46, import: 80219.28, dispatched: 150759.27, export: 49626.61, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 9, grn: 163326.20, import: 110875.75, dispatched: 177139.62, export: 47949.38, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 10, grn: 263777.21, import: 134758.65, dispatched: 146906.81, export: 81810.72, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 11, grn: 171184.87, import: 152341.37, dispatched: 100191.28, export: 65184.37, wasteCusde: 0, wasteAct: 0, enabled: true },
+        // month 12 empty
+    ],
+
+    // YD data remains as previously set (already correct)
+    yd: [
+        { year: 2025, month: 1, grn: 0, import: 0, dispatched: 20016.18, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 2, grn: 0, import: 36.10, dispatched: 28913.02, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 3, grn: 0, import: 0, dispatched: 36165.21, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 4, grn: 0, import: 32826.80, dispatched: 19973.10, export: 60, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 5, grn: 0, import: 16759.30, dispatched: 16490.41, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 6, grn: 0, import: 24860.10, dispatched: 28693.34, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 7, grn: 0, import: 1877.90, dispatched: 21248.87, export: 210.9, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 8, grn: 0, import: 177.39, dispatched: 18207.84, export: 160.1, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 9, grn: 0, import: 13330.60, dispatched: 15155.35, export: 135, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 10, grn: 0, import: 880.00, dispatched: 16129.67, export: 45, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 11, grn: 0, import: 0, dispatched: 14824.44, export: 188, wasteCusde: 0, wasteAct: 0, enabled: true },
+        { year: 2025, month: 12, grn: 0, import: 0, dispatched: 0, export: 0, wasteCusde: 0, wasteAct: 0, enabled: true }
     ]
 };
 
@@ -60,12 +76,19 @@ let charts = {};
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    // load persisted mergeYD preference if present
+    const saved = localStorage.getItem('mergeYD');
+    if (saved !== null) {
+        mergeYD = saved === 'true';
+    }
+
     initNavigation();
     initPlantToggles();
     initBreakdownTabs();
     initModal();
     initSettingsButtons();
-    
+    initMergeToggle(); // now looks for checkbox on settings page (or fallback)
+
     renderDashboard();
     renderSettingsTables();
 });
@@ -144,10 +167,12 @@ function initPlantToggles() {
     const toggles = {
         ep1: document.getElementById('toggleEP1'),
         ep2: document.getElementById('toggleEP2'),
-        cp: document.getElementById('toggleCP')
+        cp: document.getElementById('toggleCP'),
+        yd: document.getElementById('toggleYD')
     };
     
     Object.entries(toggles).forEach(([plant, toggle]) => {
+        if (!toggle) return;
         toggle.addEventListener('change', function() {
             const isEnabled = this.checked;
             plantData[plant].forEach(entry => {
@@ -157,6 +182,63 @@ function initPlantToggles() {
             renderSettingsTables();
         });
     });
+}
+
+// ============================================
+// MERGE YD TOGGLE (MOVED TO SETTINGS)
+// - This function is robust: it looks for a checkbox with id
+//   'mergeYDCheckboxSettings' (preferred — place it in Settings page),
+//   falls back to 'mergeYDCheckbox' if that exists, and persists value.
+// ============================================
+function initMergeToggle() {
+    // prefer settings checkbox id
+    const checkbox =
+        document.getElementById('mergeYDCheckboxSettings') ||
+        document.getElementById('mergeYDCheckbox');
+
+    // elements that reflect/hide YD UI parts (if present)
+    const ydTabBtn = document.getElementById('ydTabBtn');
+    const ydPieCard = document.getElementById('ydPieCard');
+
+    if (!checkbox) {
+        // no toggle exists in DOM — still apply mergeYD state (from localStorage)
+        // ensure UI reflects the current state (hide/show YD UI)
+        applyMergeYDVisibility();
+        return;
+    }
+
+    // initialize checkbox state from variable
+    checkbox.checked = mergeYD;
+
+    checkbox.addEventListener('change', function() {
+        mergeYD = this.checked;
+        // persist preference
+        localStorage.setItem('mergeYD', String(mergeYD));
+        applyMergeYDVisibility();
+        renderDashboard();
+    });
+
+    // apply initial visibility based on current flag
+    applyMergeYDVisibility();
+
+    function applyMergeYDVisibility() {
+        if (mergeYD) {
+            if (ydTabBtn) ydTabBtn.style.display = 'none';
+            if (ydPieCard) ydPieCard.style.display = 'none';
+            // if currently viewing YD, switch to CP tab if available
+            if (currentPlantView === 'yd') {
+                currentPlantView = 'cp';
+                const cpTab = document.querySelector('.tab-btn[data-plant="cp"]');
+                if (cpTab) {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    cpTab.classList.add('active');
+                }
+            }
+        } else {
+            if (ydTabBtn) ydTabBtn.style.display = '';
+            if (ydPieCard) ydPieCard.style.display = '';
+        }
+    }
 }
 
 // ============================================
@@ -190,38 +272,76 @@ function calculateMetrics(data) {
 }
 
 function aggregatePlantData(plant) {
+    // When mergeYD is true and we're aggregating CP, include YD contributions
     const data = plantData[plant].filter(entry => entry.enabled);
-    
-    return data.reduce((acc, entry) => {
+    const acc = data.reduce((acc, entry) => {
         const metrics = calculateMetrics(entry);
-        return {
-            grn: acc.grn + metrics.grn,
-            import: acc.import + metrics.import,
-            dispatched: acc.dispatched + metrics.dispatched,
-            export: acc.export + metrics.export,
-            wasteCusde: acc.wasteCusde + metrics.wasteCusde,
-            wasteAct: acc.wasteAct + metrics.wasteAct,
-            processed: acc.processed + metrics.processed,
-            balance: acc.balance + metrics.balance
-        };
+        acc.grn += metrics.grn;
+        acc.import += metrics.import;
+        acc.dispatched += metrics.dispatched;
+        acc.export += metrics.export;
+        acc.wasteCusde += metrics.wasteCusde;
+        acc.wasteAct += metrics.wasteAct;
+        acc.processed += metrics.processed;
+        acc.balance += metrics.balance;
+        return acc;
     }, { grn: 0, import: 0, dispatched: 0, export: 0, wasteCusde: 0, wasteAct: 0, processed: 0, balance: 0 });
+
+    if (mergeYD && plant === 'cp') {
+        // add YD
+        const ydTotal = plantData.yd.filter(e => e.enabled).reduce((a,e) => {
+            const m = calculateMetrics(e);
+            a.grn += m.grn; a.import += m.import; a.dispatched += m.dispatched; a.export += m.export;
+            a.wasteCusde += m.wasteCusde; a.wasteAct += m.wasteAct; a.processed += m.processed; a.balance += m.balance;
+            return a;
+        }, { grn:0, import:0, dispatched:0, export:0, wasteCusde:0, wasteAct:0, processed:0, balance:0 });
+        acc.grn += ydTotal.grn;
+        acc.import += ydTotal.import;
+        acc.dispatched += ydTotal.dispatched;
+        acc.export += ydTotal.export;
+        acc.wasteCusde += ydTotal.wasteCusde;
+        acc.wasteAct += ydTotal.wasteAct;
+        acc.processed += ydTotal.processed;
+        acc.balance += ydTotal.balance;
+    }
+
+    return acc;
 }
 
 function getAllPlantsTotal() {
-    const ep1Total = aggregatePlantData('ep1');
-    const ep2Total = aggregatePlantData('ep2');
-    const cpTotal = aggregatePlantData('cp');
-    
-    return {
-        grn: ep1Total.grn + ep2Total.grn + cpTotal.grn,
-        import: ep1Total.import + ep2Total.import + cpTotal.import,
-        dispatched: ep1Total.dispatched + ep2Total.dispatched + cpTotal.dispatched,
-        export: ep1Total.export + ep2Total.export + cpTotal.export,
-        wasteCusde: ep1Total.wasteCusde + ep2Total.wasteCusde + cpTotal.wasteCusde,
-        wasteAct: ep1Total.wasteAct + ep2Total.wasteAct + cpTotal.wasteAct,
-        processed: ep1Total.processed + ep2Total.processed + cpTotal.processed,
-        balance: ep1Total.balance + ep2Total.balance + cpTotal.balance
-    };
+    // if mergeYD = true the visible plants are ep1, ep2, cp (cp includes yd)
+    if (mergeYD) {
+        const ep1Total = aggregatePlantData('ep1');
+        const ep2Total = aggregatePlantData('ep2');
+        const cpTotal = aggregatePlantData('cp');
+        
+        return {
+            grn: ep1Total.grn + ep2Total.grn + cpTotal.grn,
+            import: ep1Total.import + ep2Total.import + cpTotal.import,
+            dispatched: ep1Total.dispatched + ep2Total.dispatched + cpTotal.dispatched,
+            export: ep1Total.export + ep2Total.export + cpTotal.export,
+            wasteCusde: ep1Total.wasteCusde + ep2Total.wasteCusde + cpTotal.wasteCusde,
+            wasteAct: ep1Total.wasteAct + ep2Total.wasteAct + cpTotal.wasteAct,
+            processed: ep1Total.processed + ep2Total.processed + cpTotal.processed,
+            balance: ep1Total.balance + ep2Total.balance + cpTotal.balance
+        };
+    } else {
+        const ep1Total = aggregatePlantData('ep1');
+        const ep2Total = aggregatePlantData('ep2');
+        const cpTotal = aggregatePlantData('cp');
+        const ydTotal = aggregatePlantData('yd');
+        
+        return {
+            grn: ep1Total.grn + ep2Total.grn + cpTotal.grn + ydTotal.grn,
+            import: ep1Total.import + ep2Total.import + cpTotal.import + ydTotal.import,
+            dispatched: ep1Total.dispatched + ep2Total.dispatched + cpTotal.dispatched + ydTotal.dispatched,
+            export: ep1Total.export + ep2Total.export + cpTotal.export + ydTotal.export,
+            wasteCusde: ep1Total.wasteCusde + ep2Total.wasteCusde + cpTotal.wasteCusde + ydTotal.wasteCusde,
+            wasteAct: ep1Total.wasteAct + ep2Total.wasteAct + cpTotal.wasteAct + ydTotal.wasteAct,
+            processed: ep1Total.processed + ep2Total.processed + cpTotal.processed + ydTotal.processed,
+            balance: ep1Total.balance + ep2Total.balance + cpTotal.balance + ydTotal.balance
+        };
+    }
 }
 
 // ============================================
@@ -258,7 +378,7 @@ function renderBreakdownTable() {
     if (currentPlantView === 'all') {
         // Show all plants combined by month
         const allMonths = new Set();
-        ['ep1', 'ep2', 'cp'].forEach(plant => {
+        ['ep1', 'ep2', 'cp', ...(mergeYD ? [] : ['yd'])].forEach(plant => {
             plantData[plant].filter(e => e.enabled).forEach(entry => {
                 allMonths.add(`${entry.year}-${entry.month}`);
             });
@@ -284,7 +404,32 @@ function renderBreakdownTable() {
                     monthTotal.wasteCusde += entry.wasteCusde;
                     monthTotal.wasteAct += entry.wasteAct;
                 }
+                // if merging YD: add YD contributions into CP
+                if (mergeYD && plant === 'cp') {
+                    const ydEntry = plantData.yd.find(e => e.year === year && e.month === month && e.enabled);
+                    if (ydEntry) {
+                        monthTotal.grn += ydEntry.grn;
+                        monthTotal.import += ydEntry.import;
+                        monthTotal.dispatched += ydEntry.dispatched;
+                        monthTotal.export += ydEntry.export;
+                        monthTotal.wasteCusde += ydEntry.wasteCusde;
+                        monthTotal.wasteAct += ydEntry.wasteAct;
+                    }
+                }
             });
+            
+            // if not merging YD, include YD separately already handled by allMonths
+            if (!mergeYD) {
+                const ydEntry = plantData.yd.find(e => e.year === year && e.month === month && e.enabled);
+                if (ydEntry) {
+                    monthTotal.grn += ydEntry.grn;
+                    monthTotal.import += ydEntry.import;
+                    monthTotal.dispatched += ydEntry.dispatched;
+                    monthTotal.export += ydEntry.export;
+                    monthTotal.wasteCusde += ydEntry.wasteCusde;
+                    monthTotal.wasteAct += ydEntry.wasteAct;
+                }
+            }
             
             const metrics = calculateMetrics(monthTotal);
             tableData.push({ year, month, ...metrics });
@@ -300,21 +445,53 @@ function renderBreakdownTable() {
         });
     } else {
         // Show single plant data
-        const data = plantData[currentPlantView].filter(e => e.enabled);
-        const sortedData = data.slice().sort((a,b) => a.year - b.year || a.month - b.month);
-        sortedData.forEach(entry => {
-            const metrics = calculateMetrics(entry);
-            tableData.push({ year: entry.year, month: entry.month, ...metrics });
-            
-            totals.grn += metrics.grn;
-            totals.import += metrics.import;
-            totals.dispatched += metrics.dispatched;
-            totals.export += metrics.export;
-            totals.wasteCusde += metrics.wasteCusde;
-            totals.wasteAct += metrics.wasteAct;
-            totals.balance += metrics.balance;
-            totals.processed += metrics.processed;
-        });
+        let plantKey = currentPlantView;
+        if (mergeYD && plantKey === 'cp') {
+            // need to create combined cp+yd entries by month
+            const months = new Set();
+            plantData.cp.filter(e => e.enabled).forEach(e => months.add(`${e.year}-${e.month}`));
+            plantData.yd.filter(e => e.enabled).forEach(e => months.add(`${e.year}-${e.month}`));
+            const sorted = Array.from(months).map(k => k.split('-').map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(ar=>`${ar[0]}-${ar[1]}`);
+            sorted.forEach(mk=>{
+                const [year, month] = mk.split('-').map(Number);
+                const cpEntry = plantData.cp.find(e=>e.year===year&&e.month===month&&e.enabled);
+                const ydEntry = plantData.yd.find(e=>e.year===year&&e.month===month&&e.enabled);
+                const combined = {
+                    grn: (cpEntry?cpEntry.grn:0) + (ydEntry?ydEntry.grn:0),
+                    import: (cpEntry?cpEntry.import:0) + (ydEntry?ydEntry.import:0),
+                    dispatched: (cpEntry?cpEntry.dispatched:0) + (ydEntry?ydEntry.dispatched:0),
+                    export: (cpEntry?cpEntry.export:0) + (ydEntry?ydEntry.export:0),
+                    wasteCusde: (cpEntry?cpEntry.wasteCusde:0) + (ydEntry?ydEntry.wasteCusde:0),
+                    wasteAct: (cpEntry?cpEntry.wasteAct:0) + (ydEntry?ydEntry.wasteAct:0)
+                };
+                const metrics = calculateMetrics(combined);
+                tableData.push({ year, month, ...metrics });
+                totals.grn += metrics.grn;
+                totals.import += metrics.import;
+                totals.dispatched += metrics.dispatched;
+                totals.export += metrics.export;
+                totals.wasteCusde += metrics.wasteCusde;
+                totals.wasteAct += metrics.wasteAct;
+                totals.balance += metrics.balance;
+                totals.processed += metrics.processed;
+            });
+        } else {
+            const data = plantData[plantKey].filter(e => e.enabled);
+            const sortedData = data.slice().sort((a,b) => a.year - b.year || a.month - b.month);
+            sortedData.forEach(entry => {
+                const metrics = calculateMetrics(entry);
+                tableData.push({ year: entry.year, month: entry.month, ...metrics });
+                
+                totals.grn += metrics.grn;
+                totals.import += metrics.import;
+                totals.dispatched += metrics.dispatched;
+                totals.export += metrics.export;
+                totals.wasteCusde += metrics.wasteCusde;
+                totals.wasteAct += metrics.wasteAct;
+                totals.balance += metrics.balance;
+                totals.processed += metrics.processed;
+            });
+        }
     }
     
     // Render rows
@@ -367,6 +544,11 @@ function renderPlantCards() {
         { id: 'ep2', name: 'EP 2', fullName: 'PLANT', icon: '🏭', color: 'ep2' },
         { id: 'cp', name: 'CP', fullName: 'PLANT', icon: '🏢', color: 'cp' }
     ];
+    
+    // If not merging, include YD as its own card
+    if (!mergeYD) {
+        plants.push({ id: 'yd', name: 'YD', fullName: 'PLANT', icon: '🏬', color: 'yd' });
+    }
     
     plants.forEach(plant => {
         const totals = aggregatePlantData(plant.id);
@@ -423,7 +605,7 @@ function renderCharts() {
 
 function getSortedMonthKeysFromData() {
     const allMonths = new Set();
-    ['ep1', 'ep2', 'cp'].forEach(plant => {
+    ['ep1', 'ep2', 'cp', ...(mergeYD ? [] : ['yd'])].forEach(plant => {
         plantData[plant].filter(e => e.enabled).forEach(entry => {
             allMonths.add(`${entry.year}-${entry.month}`);
         });
@@ -446,33 +628,37 @@ function renderPlantPerformanceChart() {
     const ep1 = aggregatePlantData('ep1');
     const ep2 = aggregatePlantData('ep2');
     const cp = aggregatePlantData('cp');
+    const yd = mergeYD ? null : aggregatePlantData('yd');
+    
+    const labels = mergeYD ? ['EP 1', 'EP 2', 'CP'] : ['EP 1', 'EP 2', 'CP', 'YD'];
+    const datasets = [
+        {
+            label: 'GRN',
+            data: mergeYD ? [ep1.grn, ep2.grn, cp.grn] : [ep1.grn, ep2.grn, cp.grn, yd.grn],
+            backgroundColor: 'rgba(59, 130, 246, 0.8)'
+        },
+        {
+            label: 'Local',
+            data: mergeYD ? [ep1.dispatched, ep2.dispatched, cp.dispatched] : [ep1.dispatched, ep2.dispatched, cp.dispatched, yd.dispatched],
+            backgroundColor: 'rgba(16, 185, 129, 0.8)'
+        },
+        {
+            label: 'Export',
+            data: mergeYD ? [ep1.export, ep2.export, cp.export] : [ep1.export, ep2.export, cp.export, yd.export],
+            backgroundColor: 'rgba(249, 115, 22, 0.8)'
+        },
+        {
+            label: 'Waste (CUSDE)',
+            data: mergeYD ? [ep1.wasteCusde, ep2.wasteCusde, cp.wasteCusde] : [ep1.wasteCusde, ep2.wasteCusde, cp.wasteCusde, yd.wasteCusde],
+            backgroundColor: 'rgba(239, 68, 68, 0.8)'
+        }
+    ];
     
     charts.plantPerformance = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['EP 1', 'EP 2', 'CP'],
-            datasets: [
-                {
-                    label: 'GRN',
-                    data: [ep1.grn, ep2.grn, cp.grn],
-                    backgroundColor: 'rgba(59, 130, 246, 0.8)'
-                },
-                {
-                    label: 'Local',
-                    data: [ep1.dispatched, ep2.dispatched, cp.dispatched],
-                    backgroundColor: 'rgba(16, 185, 129, 0.8)'
-                },
-                {
-                    label: 'Export',
-                    data: [ep1.export, ep2.export, cp.export],
-                    backgroundColor: 'rgba(249, 115, 22, 0.8)'
-                },
-                {
-                    label: 'Waste (CUSDE)',
-                    data: [ep1.wasteCusde, ep2.wasteCusde, cp.wasteCusde],
-                    backgroundColor: 'rgba(239, 68, 68, 0.8)'
-                }
-            ]
+            labels,
+            datasets
         },
         options: {
             responsive: true,
@@ -513,40 +699,59 @@ function renderMonthlyTrendsChart() {
         plantData[plantId].filter(e => e.enabled).forEach(e => {
             map[`${e.year}-${e.month}`] = e[valueKey] || 0;
         });
+        // when merging YD and plantId is 'cp', add yd contributions
+        if (mergeYD && plantId === 'cp') {
+            plantData.yd.filter(e => e.enabled).forEach(e => {
+                const key = `${e.year}-${e.month}`;
+                map[key] = (map[key] || 0) + (e[valueKey] || 0);
+            });
+        }
         return monthKeys.map(k => map[k] !== undefined ? map[k] : 0);
     }
     
     const ep1Data = buildSeries('ep1', 'grn');
     const ep2Data = buildSeries('ep2', 'grn');
     const cpData = buildSeries('cp', 'grn');
+    const ydData = mergeYD ? null : buildSeries('yd', 'grn');
+    
+    const datasets = [
+        {
+            label: 'EP 1',
+            data: ep1Data,
+            borderColor: 'rgba(59, 130, 246, 1)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4
+        },
+        {
+            label: 'EP 2',
+            data: ep2Data,
+            borderColor: 'rgba(16, 185, 129, 1)',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4
+        },
+        {
+            label: 'CP',
+            data: cpData,
+            borderColor: 'rgba(249, 115, 22, 1)',
+            backgroundColor: 'rgba(249, 115, 22, 0.1)',
+            tension: 0.4
+        }
+    ];
+    if (!mergeYD) {
+        datasets.push({
+            label: 'YD',
+            data: ydData,
+            borderColor: 'rgba(139,92,246,1)',
+            backgroundColor: 'rgba(139,92,246,0.1)',
+            tension: 0.4
+        });
+    }
     
     charts.monthlyTrends = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
-            datasets: [
-                {
-                    label: 'EP 1',
-                    data: ep1Data,
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4
-                },
-                {
-                    label: 'EP 2',
-                    data: ep2Data,
-                    borderColor: 'rgba(16, 185, 129, 1)',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.4
-                },
-                {
-                    label: 'CP',
-                    data: cpData,
-                    borderColor: 'rgba(249, 115, 22, 1)',
-                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
-                    tension: 0.4
-                }
-            ]
+            datasets
         },
         options: {
             responsive: true,
@@ -582,34 +787,47 @@ function renderUtilizationChart() {
             const metrics = calculateMetrics(e);
             map[`${e.year}-${e.month}`] = metrics.utilization;
         });
+        // merge yd into cp if needed
+        if (mergeYD && plantId === 'cp') {
+            // Build combined map explicitly
+            const combinedMap = {};
+            const months = new Set([...Object.keys(map), ...plantData.yd.filter(e=>e.enabled).map(e=>`${e.year}-${e.month}`)]);
+            months.forEach(k => {
+                const [yy, mm] = k.split('-').map(Number);
+                const cpEntry = plantData.cp.find(e=>e.year===yy&&e.month===mm&&e.enabled);
+                const ydEntry = plantData.yd.find(e=>e.year===yy&&e.month===mm&&e.enabled);
+                const combined = {
+                    grn: (cpEntry?cpEntry.grn:0) + (ydEntry?ydEntry.grn:0),
+                    dispatched: (cpEntry?cpEntry.dispatched:0) + (ydEntry?ydEntry.dispatched:0),
+                    export: (cpEntry?cpEntry.export:0) + (ydEntry?ydEntry.export:0),
+                    wasteCusde: (cpEntry?cpEntry.wasteCusde:0) + (ydEntry?ydEntry.wasteCusde:0)
+                };
+                combinedMap[k] = calculateMetrics(combined).utilization;
+            });
+            return monthKeys.map(k => combinedMap[k] !== undefined ? combinedMap[k] : 0);
+        }
         return monthKeys.map(k => (map[k] !== undefined ? map[k] : 0));
     }
     
     const ep1Util = buildUtilSeries('ep1');
     const ep2Util = buildUtilSeries('ep2');
     const cpUtil = buildUtilSeries('cp');
+    const ydUtil = mergeYD ? null : buildUtilSeries('yd');
+    
+    const datasets = [
+        { label: 'EP 1', data: ep1Util, backgroundColor: 'rgba(59, 130, 246, 0.8)' },
+        { label: 'EP 2', data: ep2Util, backgroundColor: 'rgba(16, 185, 129, 0.8)' },
+        { label: 'CP', data: cpUtil, backgroundColor: 'rgba(249, 115, 22, 0.8)' }
+    ];
+    if (!mergeYD) {
+        datasets.push({ label: 'YD', data: ydUtil, backgroundColor: 'rgba(139,92,246,0.8)' });
+    }
     
     charts.utilization = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [
-                {
-                    label: 'EP 1',
-                    data: ep1Util,
-                    backgroundColor: 'rgba(59, 130, 246, 0.8)'
-                },
-                {
-                    label: 'EP 2',
-                    data: ep2Util,
-                    backgroundColor: 'rgba(16, 185, 129, 0.8)'
-                },
-                {
-                    label: 'CP',
-                    data: cpUtil,
-                    backgroundColor: 'rgba(249, 115, 22, 0.8)'
-                }
-            ]
+            datasets
         },
         options: {
             responsive: true,
@@ -633,6 +851,7 @@ function renderPieCharts() {
         { id: 'cp', canvasId: 'cpPieChart', color: ['#3b82f6', '#10b981', '#ef4444'] }
     ];
     
+    // Render CP (possibly merged)
     plants.forEach(plant => {
         const ctx = document.getElementById(plant.canvasId);
         if (!ctx) return;
@@ -659,6 +878,35 @@ function renderPieCharts() {
             }
         });
     });
+
+    // YD pie only when not merged
+    const ydCtx = document.getElementById('ydPieChart');
+    if (ydCtx) {
+        if (charts.ydPie) charts.ydPie.destroy();
+        if (!mergeYD) {
+            const totals = aggregatePlantData('yd');
+            charts.ydPie = new Chart(ydCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Local', 'Export', 'Waste (CUSDE)'],
+                    datasets: [{
+                        data: [totals.dispatched, totals.export, totals.wasteCusde],
+                        backgroundColor: ['#8b5cf6','#3b82f6','#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+            const ydPieCard = document.getElementById('ydPieCard');
+            if (ydPieCard) ydPieCard.style.display = '';
+        } else {
+            const ydPieCard = document.getElementById('ydPieCard');
+            if (ydPieCard) ydPieCard.style.display = 'none';
+        }
+    }
 }
 
 // ============================================
@@ -695,7 +943,10 @@ function renderFlowAnalysis() {
         </div>
     `;
 }
-// ..........................................................................................
+
+// ============================================
+// INSIGHTS
+// ============================================
 
 function renderInsights() {
     const container = document.getElementById('insightsContainer');
@@ -710,12 +961,6 @@ function renderInsights() {
         </div>
     `).join('');
 }
-
-//.............................................................................................
-
-// ============================================
-// INSIGHTS (Continuation from your existing code)
-// ============================================
 
 function generateInsights() {
     const insights = [];
@@ -800,6 +1045,11 @@ function renderSettingsTables() {
     renderPlantSettingsTable('ep1', 'ep1TableBody');
     renderPlantSettingsTable('ep2', 'ep2TableBody');
     renderPlantSettingsTable('cp', 'cpTableBody');
+    renderPlantSettingsTable('yd', 'ydTableBody');
+
+    // reflect persisted mergeYD state on settings page if checkbox exists
+    const settingsCheckbox = document.getElementById('mergeYDCheckboxSettings');
+    if (settingsCheckbox) settingsCheckbox.checked = mergeYD;
 }
 
 function renderPlantSettingsTable(plantId, tbodyId) {
@@ -855,25 +1105,37 @@ function editMonthData(plantId, index) {
     
     // Populate the selected plant's data
     const plantPrefix = plantId.toUpperCase();
-    document.getElementById(`input${plantPrefix}GRN`).value = entry.grn;
-    document.getElementById(`input${plantPrefix}Import`).value = entry.import;
-    document.getElementById(`input${plantPrefix}Dispatched`).value = entry.dispatched;
-    document.getElementById(`input${plantPrefix}Export`).value = entry.export;
-    document.getElementById(`input${plantPrefix}WasteCusde`).value = entry.wasteCusde;
-    document.getElementById(`input${plantPrefix}WasteAct`).value = entry.wasteAct;
+    const inputGrn = document.getElementById(`input${plantPrefix}GRN`);
+    if (inputGrn) inputGrn.value = entry.grn;
+    const inputImport = document.getElementById(`input${plantPrefix}Import`);
+    if (inputImport) inputImport.value = entry.import;
+    const inputDisp = document.getElementById(`input${plantPrefix}Dispatched`);
+    if (inputDisp) inputDisp.value = entry.dispatched;
+    const inputExp = document.getElementById(`input${plantPrefix}Export`);
+    if (inputExp) inputExp.value = entry.export;
+    const inputWC = document.getElementById(`input${plantPrefix}WasteCusde`);
+    if (inputWC) inputWC.value = entry.wasteCusde;
+    const inputWA = document.getElementById(`input${plantPrefix}WasteAct`);
+    if (inputWA) inputWA.value = entry.wasteAct;
     
     // For other plants, check if same month exists
-    const otherPlants = ['ep1', 'ep2', 'cp'].filter(p => p !== plantId);
+    const otherPlants = ['ep1', 'ep2', 'cp', 'yd'].filter(p => p !== plantId);
     otherPlants.forEach(plant => {
         const otherEntry = plantData[plant].find(e => e.year === entry.year && e.month === entry.month);
         if (otherEntry) {
             const prefix = plant.toUpperCase();
-            document.getElementById(`input${prefix}GRN`).value = otherEntry.grn;
-            document.getElementById(`input${prefix}Import`).value = otherEntry.import;
-            document.getElementById(`input${prefix}Dispatched`).value = otherEntry.dispatched;
-            document.getElementById(`input${prefix}Export`).value = otherEntry.export;
-            document.getElementById(`input${prefix}WasteCusde`).value = otherEntry.wasteCusde;
-            document.getElementById(`input${prefix}WasteAct`).value = otherEntry.wasteAct;
+            const g = document.getElementById(`input${prefix}GRN`);
+            if (g) g.value = otherEntry.grn;
+            const im = document.getElementById(`input${prefix}Import`);
+            if (im) im.value = otherEntry.import;
+            const d = document.getElementById(`input${prefix}Dispatched`);
+            if (d) d.value = otherEntry.dispatched;
+            const ex = document.getElementById(`input${prefix}Export`);
+            if (ex) ex.value = otherEntry.export;
+            const wc = document.getElementById(`input${prefix}WasteCusde`);
+            if (wc) wc.value = otherEntry.wasteCusde;
+            const wa = document.getElementById(`input${prefix}WasteAct`);
+            if (wa) wa.value = otherEntry.wasteAct;
         }
     });
     
@@ -898,37 +1160,47 @@ function initModal() {
     const cancelBtn = document.getElementById('cancelBtn');
     const form = document.getElementById('dataForm');
     
-    closeBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
     
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
     
-    form.addEventListener('submit', handleFormSubmit);
+    if (form) form.addEventListener('submit', handleFormSubmit);
 }
 
 function openModal() {
-    document.getElementById('dataModal').classList.add('active');
+    const modal = document.getElementById('dataModal');
+    if (modal) modal.classList.add('active');
 }
 
 function closeModal() {
-    document.getElementById('dataModal').classList.remove('active');
+    const modal = document.getElementById('dataModal');
+    if (modal) modal.classList.remove('active');
     editingMonthKey = null;
     clearFormInputs();
 }
 
 function clearFormInputs() {
-    const plants = ['EP1', 'EP2', 'CP'];
+    const plants = ['EP1', 'EP2', 'CP', 'YD'];
     plants.forEach(plant => {
-        document.getElementById(`input${plant}GRN`).value = 0;
-        document.getElementById(`input${plant}Import`).value = 0;
-        document.getElementById(`input${plant}Dispatched`).value = 0;
-        document.getElementById(`input${plant}Export`).value = 0;
-        document.getElementById(`input${plant}WasteCusde`).value = 0;
-        document.getElementById(`input${plant}WasteAct`).value = 0;
+        const elGrn = document.getElementById(`input${plant}GRN`);
+        if (elGrn) elGrn.value = 0;
+        const elImport = document.getElementById(`input${plant}Import`);
+        if (elImport) elImport.value = 0;
+        const elDisp = document.getElementById(`input${plant}Dispatched`);
+        if (elDisp) elDisp.value = 0;
+        const elExp = document.getElementById(`input${plant}Export`);
+        if (elExp) elExp.value = 0;
+        const elWC = document.getElementById(`input${plant}WasteCusde`);
+        if (elWC) elWC.value = 0;
+        const elWA = document.getElementById(`input${plant}WasteAct`);
+        if (elWA) elWA.value = 0;
     });
 }
 
@@ -938,7 +1210,7 @@ function handleFormSubmit(e) {
     const year = parseInt(document.getElementById('inputYear').value);
     const month = parseInt(document.getElementById('inputMonth').value);
     
-    const plants = ['ep1', 'ep2', 'cp'];
+    const plants = ['ep1', 'ep2', 'cp', 'yd'];
     
     if (editingMonthKey) {
         // Edit mode
@@ -950,12 +1222,12 @@ function handleFormSubmit(e) {
             const newData = {
                 year: year,
                 month: month,
-                grn: parseFloat(document.getElementById(`input${prefix}GRN`).value) || 0,
-                import: parseFloat(document.getElementById(`input${prefix}Import`).value) || 0,
-                dispatched: parseFloat(document.getElementById(`input${prefix}Dispatched`).value) || 0,
-                export: parseFloat(document.getElementById(`input${prefix}Export`).value) || 0,
-                wasteCusde: parseFloat(document.getElementById(`input${prefix}WasteCusde`).value) || 0,
-                wasteAct: parseFloat(document.getElementById(`input${prefix}WasteAct`).value) || 0,
+                grn: parseFloat((document.getElementById(`input${prefix}GRN`) || { value: 0 }).value) || 0,
+                import: parseFloat((document.getElementById(`input${prefix}Import`) || { value: 0 }).value) || 0,
+                dispatched: parseFloat((document.getElementById(`input${prefix}Dispatched`) || { value: 0 }).value) || 0,
+                export: parseFloat((document.getElementById(`input${prefix}Export`) || { value: 0 }).value) || 0,
+                wasteCusde: parseFloat((document.getElementById(`input${prefix}WasteCusde`) || { value: 0 }).value) || 0,
+                wasteAct: parseFloat((document.getElementById(`input${prefix}WasteAct`) || { value: 0 }).value) || 0,
                 enabled: true
             };
             
@@ -999,12 +1271,12 @@ function handleFormSubmit(e) {
             const newData = {
                 year: year,
                 month: month,
-                grn: parseFloat(document.getElementById(`input${prefix}GRN`).value) || 0,
-                import: parseFloat(document.getElementById(`input${prefix}Import`).value) || 0,
-                dispatched: parseFloat(document.getElementById(`input${prefix}Dispatched`).value) || 0,
-                export: parseFloat(document.getElementById(`input${prefix}Export`).value) || 0,
-                wasteCusde: parseFloat(document.getElementById(`input${prefix}WasteCusde`).value) || 0,
-                wasteAct: parseFloat(document.getElementById(`input${prefix}WasteAct`).value) || 0,
+                grn: parseFloat((document.getElementById(`input${prefix}GRN`) || { value: 0 }).value) || 0,
+                import: parseFloat((document.getElementById(`input${prefix}Import`) || { value: 0 }).value) || 0,
+                dispatched: parseFloat((document.getElementById(`input${prefix}Dispatched`) || { value: 0 }).value) || 0,
+                export: parseFloat((document.getElementById(`input${prefix}Export`) || { value: 0 }).value) || 0,
+                wasteCusde: parseFloat((document.getElementById(`input${prefix}WasteCusde`) || { value: 0 }).value) || 0,
+                wasteAct: parseFloat((document.getElementById(`input${prefix}WasteAct`) || { value: 0 }).value) || 0,
                 enabled: true
             };
             
@@ -1029,32 +1301,36 @@ function initSettingsButtons() {
     const addDataBtn = document.getElementById('addDataBtn');
     const resetDataBtn = document.getElementById('resetDataBtn');
     
-    addDataBtn.addEventListener('click', function() {
-        editingMonthKey = null;
-        document.getElementById('modalTitle').textContent = 'Add New Month Data';
-        clearFormInputs();
-        
-        // Set default values
-        const currentDate = new Date();
-        document.getElementById('inputYear').value = currentDate.getFullYear();
-        document.getElementById('inputMonth').value = currentDate.getMonth() + 1;
-        
-        openModal();
-    });
+    if (addDataBtn) {
+        addDataBtn.addEventListener('click', function() {
+            editingMonthKey = null;
+            document.getElementById('modalTitle').textContent = 'Add New Month Data';
+            clearFormInputs();
+            
+            // Set default values
+            const currentDate = new Date();
+            document.getElementById('inputYear').value = currentDate.getFullYear();
+            document.getElementById('inputMonth').value = currentDate.getMonth() + 1;
+            
+            openModal();
+        });
+    }
     
-    resetDataBtn.addEventListener('click', function() {
-        if (confirm('Are you sure you want to reset all data to default values? This cannot be undone.')) {
-            resetToDefaultData();
-            renderDashboard();
-            renderSettingsTables();
-            alert('Data has been reset to default values.');
-        }
-    });
+    if (resetDataBtn) {
+        resetDataBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to reset all data to default values? This cannot be undone.')) {
+                resetToDefaultData();
+                renderDashboard();
+                renderSettingsTables();
+                alert('Data has been reset to default values.');
+            }
+        });
+    }
 }
 
 function resetToDefaultData() {
-    // Reuse the same sample data (could factor out), resetting to initial sample values
-    // (omitted for brevity since same as initial plantData — call page reload to revert)
+    // simple reload to restore initial sample dataset declared in-file
+    localStorage.removeItem('mergeYD');
     location.reload();
 }
 
