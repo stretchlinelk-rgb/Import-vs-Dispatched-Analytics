@@ -995,3 +995,10 @@ tbody tr:hover {
     }
 }
 
+@media (max-width: 896px) {
+    .MergeYD_Comments {
+        display: none;
+    }
+}
+
+
