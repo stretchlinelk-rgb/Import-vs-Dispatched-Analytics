@@ -981,10 +981,16 @@ tbody tr:hover {
     }
     
     .nav-brand {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
     }
 
     .breakdown-table {
         font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 896px) {
+    .hide-analytics {
+        display: none;
     }
 }
