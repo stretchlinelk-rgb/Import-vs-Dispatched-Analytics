@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Overview</title>
+    <title>IMPORT VS DISPATCHED  </title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
@@ -27,7 +27,7 @@
     <!-- Dashboard Page -->
     <div id="dashboardPage" class="page active">
         <div class="container">
-            <h1 class="page-title">Dashboard Overview</h1>
+            <h1 class="page-title">Dashboard Overview </h1>
             
             <!-- KPI Cards -->
             <div class="kpi-grid">
@@ -44,7 +44,7 @@
                     <div class="kpi-content">
                         <div class="kpi-label">Total Processed</div>
                         <div class="kpi-value" id="totalProcessed">0</div>
-                        <div class="kpi-sublabel">Local + Export + Waste</div>
+                        <div class="kpi-sublabel">Local + Export + Waste (CUSDE)</div>
                     </div>
                 </div>
                 
@@ -70,11 +70,14 @@
             <div class="breakdown-section">
                 <div class="breakdown-header">
                     <h2>📋 Detailed Monthly Breakdown</h2>
-                    <div class="plant-tabs" id="plantTabs">
-                        <button class="tab-btn active" data-plant="all">ALL PLANTS</button>
-                        <button class="tab-btn" data-plant="ep1">EP 1</button>
-                        <button class="tab-btn" data-plant="ep2">EP 2</button>
-                        <button class="tab-btn" data-plant="cp">CP</button>
+                    <div style="display:flex; gap:1rem; align-items:center;">
+                        <div class="plant-tabs" id="plantTabs">
+                            <button class="tab-btn active" data-plant="all">ALL PLANTS</button>
+                            <button class="tab-btn" data-plant="ep1">EP 1</button>
+                            <button class="tab-btn" data-plant="ep2">EP 2</button>
+                            <button class="tab-btn" data-plant="cp">CP</button>
+                            <button class="tab-btn" data-plant="yd" id="ydTabBtn">YD</button>
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -87,8 +90,8 @@
                                 <th>Local<br>(Dispatched)</th>
                                 <th>Export</th>
                                 <th colspan="2">Waste</th>
-                                <th>GAP STOCK</th>
-                                <th>PRECENTAGE</th>
+                                <th>BALANCE / GAP STOCK</th>
+                                <th>%</th>
                             </tr>
                             <tr class="sub-header">
                                 <th></th>
@@ -148,18 +151,23 @@
 
                 <!-- Distribution Pie Charts -->
                 <div class="chart-card">
-                    <h3>EP 1 - PLANT</h3>
+                    <h3>EP 1 - Distribution</h3>
                     <canvas id="ep1PieChart"></canvas>
                 </div>
                 
                 <div class="chart-card">
-                    <h3>EP 2 - PLANT</h3>
+                    <h3>EP 2 - Distribution</h3>
                     <canvas id="ep2PieChart"></canvas>
                 </div>
                 
-                <div class="chart-card">
-                    <h3>CP - PLANT</h3>
+                <div class="chart-card" id="cpPieCard">
+                    <h3>CP - Distribution</h3>
                     <canvas id="cpPieChart"></canvas>
+                </div>
+
+                <div class="chart-card" id="ydPieCard">
+                    <h3>YD - Distribution</h3>
+                    <canvas id="ydPieChart"></canvas>
                 </div>
 
                 <!-- Flow Analysis -->
@@ -190,22 +198,44 @@
                         <label class="toggle-label">
                             <input type="checkbox" id="toggleEP1" checked>
                             <span class="toggle-slider"></span>
-                            <span class="toggle-text">Enable EP 1 (PLANT)</span>
+                            <span class="toggle-text">Enable EP 1 (External Plant 1)</span>
                         </label>
                     </div>
                     <div class="toggle-item">
                         <label class="toggle-label">
                             <input type="checkbox" id="toggleEP2" checked>
                             <span class="toggle-slider"></span>
-                            <span class="toggle-text">Enable EP 2 (PLANT)</span>
+                            <span class="toggle-text">Enable EP 2 (External Plant 2)</span>
                         </label>
                     </div>
                     <div class="toggle-item">
                         <label class="toggle-label">
                             <input type="checkbox" id="toggleCP" checked>
                             <span class="toggle-slider"></span>
-                            <span class="toggle-text">Enable CP (PLANT)</span>
+                            <span class="toggle-text">Enable CP (Central Plant)</span>
                         </label>
+                    </div>
+                    <div class="toggle-item">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="toggleYD" checked>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-text">Enable YD (YD Plant)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merge YD option moved to Settings -->
+            <div class="settings-card">
+                <h3>🔀 Merge Options</h3>
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <label class="toggle-label" style="cursor: pointer;">
+                        <input type="checkbox" id="mergeYDCheckboxSettings">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text">Merge YD into CP (3-plant view)</span>
+                    </label>
+                    <div style="color:var(--text-secondary); font-size:0.9rem;">
+                        When enabled YD numbers are added to CP and YD is hidden from lists and charts.
                     </div>
                 </div>
             </div>
@@ -221,7 +251,7 @@
 
             <!-- Data Entry Tables by Plant -->
             <div class="settings-card">
-                <h3>EP 1 - PLANT</h3>
+                <h3>EP 1 - External Plant 1</h3>
                 <div class="table-responsive">
                     <table class="data-entry-table">
                         <thead>
@@ -244,7 +274,7 @@
             </div>
 
             <div class="settings-card">
-                <h3>EP 2 - PLANT</h3>
+                <h3>EP 2 - External Plant 2</h3>
                 <div class="table-responsive">
                     <table class="data-entry-table">
                         <thead>
@@ -267,7 +297,7 @@
             </div>
 
             <div class="settings-card">
-                <h3>CP - PLANT</h3>
+                <h3>CP - Central Plant</h3>
                 <div class="table-responsive">
                     <table class="data-entry-table">
                         <thead>
@@ -285,6 +315,29 @@
                             </tr>
                         </thead>
                         <tbody id="cpTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>YD - (YD Plant)</h3>
+                <div class="table-responsive">
+                    <table class="data-entry-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Month</th>
+                                <th>GRN</th>
+                                <th>Import</th>
+                                <th>Local</th>
+                                <th>Export</th>
+                                <th>Waste (CUSDE)</th>
+                                <th>Waste (ACT)</th>
+                                <th>Enabled</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ydTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -412,6 +465,38 @@
                     <div class="form-group">
                         <label>Waste (ACT)</label>
                         <input type="number" id="inputCPWasteAct" min="0" step="0.01" required>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; color: var(--primary-color);">YD Data</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>GRN (ROW YARN)</label>
+                        <input type="number" id="inputYDGRN" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Import (Sachintha)</label>
+                        <input type="number" id="inputYDImport" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Local (Dispatched)</label>
+                        <input type="number" id="inputYDDispatched" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Export</label>
+                        <input type="number" id="inputYDExport" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Waste (CUSDE)</label>
+                        <input type="number" id="inputYDWasteCusde" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Waste (ACT)</label>
+                        <input type="number" id="inputYDWasteAct" min="0" step="0.01" required>
                     </div>
                 </div>
 
